@@ -1,0 +1,92 @@
+{
+  "fromVersion": "1.20.4",
+  "toVersion": "1.20.5",
+  "loader": "neoforge",
+  "notes": "Java 17→21 boundary. Introduction of Codec-based data components replacing NBT-based ItemStack damage/custom data. NeoForge diverges from Forge here.",
+  "rules": [
+    {
+      "id": "itemstack-getdamagevalue-to-component",
+      "kind": "METHOD_CALL_ARGS_TO_OBJECT",
+      "receiverTypes": ["net.minecraft.world.item.ItemStack"],
+      "methodName": "getDamageValue",
+      "matchSignature": [],
+      "wrapperConstructor": null,
+      "direction": "forward",
+      "inverse": null,
+      "reason": "ItemStack.getDamageValue() was replaced by the DataComponents system in 1.20.5. Use stack.get(DataComponents.DAMAGE) instead.",
+      "replacement": {
+        "pattern": "{receiver}.getDamageValue()",
+        "template": "{receiver}.getOrDefault(DataComponents.DAMAGE, 0)"
+      },
+      "confidence": "HIGH",
+      "severity": "WARNING",
+      "requiresReview": true,
+      "automationLevel": "PARTIAL",
+      "breakingRisk": "LOW",
+      "loaderGuard": ["neoforge", "fabric"],
+      "tags": ["item"]
+    },
+    {
+      "id": "itemstack-settag-to-component",
+      "kind": "METHOD_CALL_ARGS_TO_OBJECT",
+      "receiverTypes": ["net.minecraft.world.item.ItemStack"],
+      "methodName": "setTag",
+      "matchSignature": ["CompoundTag"],
+      "wrapperConstructor": null,
+      "direction": "forward",
+      "inverse": null,
+      "reason": "ItemStack.setTag(CompoundTag) was removed in 1.20.5. NBT data is now stored via DataComponents. This is a complex migration that requires manual review.",
+      "replacement": {
+        "pattern": "{receiver}.setTag({0})",
+        "template": "{receiver}.set(DataComponents.CUSTOM_DATA, CustomData.of({0}))"
+      },
+      "confidence": "MEDIUM",
+      "severity": "CRITICAL",
+      "requiresReview": true,
+      "automationLevel": "PARTIAL",
+      "breakingRisk": "HIGH",
+      "loaderGuard": ["neoforge", "fabric"],
+      "tags": ["item", "nbt", "datacomponents"]
+    },
+    {
+      "id": "itemstack-gettag-to-component",
+      "kind": "METHOD_CALL_ARGS_TO_OBJECT",
+      "receiverTypes": ["net.minecraft.world.item.ItemStack"],
+      "methodName": "getTag",
+      "matchSignature": [],
+      "wrapperConstructor": null,
+      "direction": "forward",
+      "inverse": null,
+      "reason": "ItemStack.getTag() was removed in 1.20.5. Use DataComponents.CUSTOM_DATA instead.",
+      "replacement": {
+        "pattern": "{receiver}.getTag()",
+        "template": "{receiver}.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()"
+      },
+      "confidence": "MEDIUM",
+      "severity": "CRITICAL",
+      "requiresReview": true,
+      "automationLevel": "PARTIAL",
+      "breakingRisk": "HIGH",
+      "loaderGuard": ["neoforge", "fabric"],
+      "tags": ["item", "nbt", "datacomponents"]
+    },
+    {
+      "id": "data-components-import",
+      "kind": "IMPORT_REWRITE",
+      "direction": "forward",
+      "reason": "New DataComponents API imports required for 1.20.5+.",
+      "importRewrites": {
+        "net.minecraft.nbt.CompoundTag": "net.minecraft.nbt.CompoundTag",
+        "ADD:net.minecraft.core.component.DataComponents": "net.minecraft.core.component.DataComponents",
+        "ADD:net.minecraft.world.item.component.CustomData": "net.minecraft.world.item.component.CustomData"
+      },
+      "confidence": "HIGH",
+      "severity": "INFO",
+      "requiresReview": false,
+      "automationLevel": "FULL_AUTO",
+      "breakingRisk": "NONE",
+      "loaderGuard": ["neoforge", "fabric"],
+      "tags": ["imports"]
+    }
+  ]
+}
