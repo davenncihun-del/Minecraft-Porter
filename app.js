@@ -588,6 +588,9 @@ async function updateFile(){
 
 
 
+        const mergedResult = { ...(lastInspection || {}), ...result };
+        renderReport(mergedResult);
+
         setStatus(
             isBatch
                 ? "Dependent mod bundle updated and downloaded."
@@ -661,6 +664,22 @@ function list(items){
 
 }
 
+function renderDependencies(data) {
+    if (data.dependency_analysis && data.dependency_analysis.resolutions && data.dependency_analysis.resolutions.length > 0) {
+        const res = data.dependency_analysis.resolutions;
+        return "<ul>" + res.map(r => {
+            if (r.status === "RESOLVED") {
+                return `<li>✅ <strong>${escapeHTML(r.mod_id)}</strong>: Resolved to v${escapeHTML(r.resolved_version)} <em>(Range: <code>${escapeHTML(r.version_range)}</code>)</em></li>`;
+            } else {
+                return `<li>❌ <strong>${escapeHTML(r.mod_id)}</strong>: Unresolved (${escapeHTML(r.status)})</li>`;
+            }
+        }).join("") + "</ul>";
+    } else if (data.discovered_dependencies && data.discovered_dependencies.length > 0) {
+        return "<ul>" + data.discovered_dependencies.map(d => `<li>🔍 Found: <strong>${escapeHTML(d)}</strong> (Will resolve on port)</li>`).join("") + "</ul>";
+    }
+    return "<ul><li>None</li></ul>";
+}
+
 
 
 function renderReport(data){
@@ -712,7 +731,7 @@ function renderReport(data){
 
 
 <h3>Dependencies</h3>
-<ul>${list(data.required_dependencies)}</ul>
+${renderDependencies(data)}
 
 
 <h3>Archive Summary</h3>
