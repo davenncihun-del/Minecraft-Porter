@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional, Tuple
 import javalang
 
 from bytecode import ClassReferenceExtractor
-from dependency import DependencyResolver
+from betterdependency_bridge import run_betterdependency_cli
 
 MIXIN_ANNOTATIONS = {"Inject", "Redirect", "ModifyArg", "ModifyVariable", "ModifyConstant", "ModifyReturnValue"}
 
@@ -97,8 +97,8 @@ class ArchiveAnalyzer:
             analysis.has_class = len(analysis.class_files) > 0
             if not analysis.has_java and analysis.has_class:
                 analysis.issues.append("Compiled Java classes were found without source. Bytecode-level validation will be used.")
-            resolver = DependencyResolver()
-            analysis.dependency_report = resolver.build_report_entries(resolver.resolve(analysis.metadata, analysis.loader, target_version or "unknown"))
+            cli_result = run_betterdependency_cli(str(archive_path), target_version or "unknown", analysis.loader)
+            analysis.dependency_report = cli_result.get("resolutions", [])
             return analysis
 
     def detect_loader(self, names: List[str]) -> Tuple[str, Optional[str]]:
