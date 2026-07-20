@@ -10,7 +10,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, List, Any
 
-import tomllib
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 from fastapi import FastAPI, File, HTTPException, UploadFile, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
@@ -18,14 +21,8 @@ from pydantic import BaseModel
 
 from analyzer import ArchiveAnalyzer
 from betterdependency_bridge import run_betterdependency_cli, extract_dependency_overrides, get_unresolved_dependencies
-from loader_api import LoaderApiDiff
-from mappings import MappingSet, MappingDiff
-from planner import MigrationPlanner
 from porting_engine import PortingEngine
-from report import ReportBuilder
-from runtime.java_manager import JavaManager, JavaResolutionError
-from transformer import Transformer, rewrite_metadata, get_loader_version
-from validator import Validator
+from transformer import rewrite_metadata
 from inspector_lib import ModInspector
 
 # --- Core Configuration & Persistent Storage ---
@@ -157,9 +154,7 @@ def cleanup_old_files():
 
 
 # --- Parsers & Extractors ---
-def load_mapping_set(version: str) -> Optional[MappingSet]:
-    mapping_path = BASE_DIR / "mappings" / f"{version}-intermediary.tiny"
-    return MappingSet.from_tiny(mapping_path) if mapping_path.exists() else None
+
 
 def load_target_jar(version: str) -> Optional[Path]:
     jar_path = BASE_DIR / "jars" / f"minecraft-{version}.jar"

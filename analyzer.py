@@ -122,6 +122,9 @@ class ArchiveAnalyzer:
         if loader in {"Forge", "NeoForge"}:
             try:
                 import tomllib
+            except ImportError:
+                import tomli as tomllib
+            try:
                 return tomllib.loads(text)
             except Exception:
                 return {"raw": text}
