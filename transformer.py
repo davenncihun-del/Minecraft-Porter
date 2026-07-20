@@ -104,9 +104,8 @@ def rewrite_metadata(
         toml_updates = {
             "minecraft": minecraft_range,
             loader_id: loader_range,
+            "javafml": custom_javafml_version or loader_range,
         }
-        if custom_javafml_version:
-            toml_updates["javafml"] = custom_javafml_version
             
         for mod_id, version_range in (dependency_overrides or {}).items():
             if version_range is not None:
