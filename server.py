@@ -17,7 +17,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from pydantic import BaseModel
 
 from analyzer import ArchiveAnalyzer
-from betterdependency_bridge import run_betterdependency_cli
+from betterdependency_bridge import run_betterdependency_cli, extract_dependency_overrides, get_unresolved_dependencies
 from loader_api import LoaderApiDiff
 from mappings import MappingSet, MappingDiff
 from planner import MigrationPlanner
@@ -301,13 +301,13 @@ def run_update_job(job_id: str, payload: UpdateRequest, stored: StoredFile):
         target_version = resolve_target_version(inspection_results["current_version"], payload.target_version)
         dynamic_overrides = payload.dependency_overrides or {}
         
-        # Automatic Modrinth resolution is now handled natively by BetterDependency CLI
-        # (Though currently stubbed in Java, it will perform full resolution when implemented)
-        
-        try:
-            dep_analysis = run_betterdependency_cli(str(stored.path), target_version, loader)
-        except Exception:
-            dep_analysis = None
+        # Run BetterDependency CLI to resolve third-party dependencies via Modrinth
+        dep_analysis = run_betterdependency_cli(str(stored.path), target_version, loader)
+
+        # Merge resolved dependency versions into the overrides.
+        # User-provided overrides take priority over auto-resolved ones.
+        resolved_overrides = extract_dependency_overrides(dep_analysis)
+        merged_overrides = {**resolved_overrides, **dynamic_overrides}
 
         analyzer = ArchiveAnalyzer()
         analysis = analyzer.analyze_archive(stored.path, target_version=target_version)
@@ -320,7 +320,7 @@ def run_update_job(job_id: str, payload: UpdateRequest, stored: StoredFile):
             custom_neoforge_version=payload.custom_neoforge_version,
             custom_javafml_version=payload.custom_javafml_version,
             custom_minecraft_version=payload.custom_minecraft_version,
-            dependency_overrides=dynamic_overrides
+            dependency_overrides=merged_overrides
         )
 
         token = uuid.uuid4().hex
@@ -328,6 +328,9 @@ def run_update_job(job_id: str, payload: UpdateRequest, stored: StoredFile):
             token=token, path=updated_archive_path, filename=updated_archive_path.name,
             media_type="application/java-archive" if stored.path.suffix.lower() == ".jar" else "application/zip"
         )
+
+        # Collect unresolved dependency warnings for the report
+        unresolved_deps = get_unresolved_dependencies(dep_analysis)
 
         # Mark ticket as resolved
         TASKS_STORE[job_id] = {
@@ -338,7 +341,9 @@ def run_update_job(job_id: str, payload: UpdateRequest, stored: StoredFile):
             "changed_files": port_report.get("changed_files", []),
             "unresolved_issues": port_report.get("unresolved_issues", []),
             "bundled_dependencies_updated": port_report.get("bundled_dependencies_updated", []),
-            "dependency_analysis": dep_analysis
+            "dependency_analysis": dep_analysis,
+            "resolved_overrides": resolved_overrides,
+            "unresolved_dependencies": unresolved_deps,
         }
     except Exception as exc:
         TASKS_STORE[job_id] = {"status": "failed", "error": str(exc)}
@@ -456,10 +461,10 @@ def analyze_dependencies(payload: AnalyzeDependenciesRequest):
     current_version = extract_current_version(loader, metadata_path, current_text) if metadata_path else None
     target_version = resolve_target_version(current_version, payload.target_version)
 
-    try:
-        return run_betterdependency_cli(str(stored.path), target_version, loader)
-    except Exception as exc:
-        raise HTTPException(status_code=500, detail=f"Analysis pipeline crashed: {exc}")
+    result = run_betterdependency_cli(str(stored.path), target_version, loader)
+    if result.get("status") == "error":
+        raise HTTPException(status_code=500, detail=result.get("message", "Analysis pipeline crashed"))
+    return result
 
 @app.post("/inspect")
 def inspect_file(payload: InspectRequest):

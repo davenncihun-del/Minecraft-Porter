@@ -365,6 +365,8 @@ class PortingEngine:
                 }
                 if bundled_dependency_notes:
                     report["bundled_dependencies_updated"] = bundled_dependency_notes
+                if dependency_overrides:
+                    report["dependency_overrides_applied"] = dict(dependency_overrides)
 
                 dest_archive.writestr("compatibility-report.json", json.dumps(report, indent=2))
                 dest_archive.writestr(
