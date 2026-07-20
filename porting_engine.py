@@ -457,8 +457,6 @@ class PortingEngine:
             rules.append("fabric:metadata")
 
         if file_name.endswith(("mods.toml", "neoforge.mods.toml")):
-            updated_text = re.sub(r'(minecraft\s*=\s*")([^"]+)("\s*)', rf'\g<1>{self.target_version}\g<3>', updated_text)
-            updated_text = re.sub(r'(versionRange\s*=\s*")([^"]+)("\s*)', rf'\g<1>[{self.target_version}]\g<3>', updated_text)
             updated_text = re.sub(r'(?m)^version\s*=\s*"([^"]+)"', f'version = "{self.target_version}"', updated_text)
             rules.append("neoforge:metadata")
 
@@ -498,8 +496,6 @@ class PortingEngine:
                 rules.append("data:namespaces")
 
         if file_name.endswith((".properties", ".cfg", ".toml")):
-            updated_text = re.sub(r'(minecraft(_version)?\s*=\s*)([^\s#]+)', rf'\g<1>{self.target_version}', updated_text)
-            updated_text = re.sub(r'(versionRange\s*=\s*")([^"]+)("\s*)', rf'\g<1>[{self.target_version}]\g<3>', updated_text)
             if "minecraft" in updated_text and self.target_version not in updated_text:
                 rules.append("config:version")
 
