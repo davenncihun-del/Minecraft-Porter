@@ -1,0 +1,3 @@
+tiny	2	0	intermediary	named
+c	net/minecraft/class_123	net/minecraft/world/level/block/NewBlock
+	m	()V	method_456	getNewBlockState

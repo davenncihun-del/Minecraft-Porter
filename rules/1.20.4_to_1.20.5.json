@@ -17,14 +17,7 @@
       "replacement": {
         "pattern": "{receiver}.getDamageValue()",
         "template": "{receiver}.getOrDefault(DataComponents.DAMAGE, 0)"
-      },
-      "confidence": "HIGH",
-      "severity": "WARNING",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "LOW",
-      "loaderGuard": ["neoforge", "fabric"],
-      "tags": ["item"]
+      }
     },
     {
       "id": "itemstack-settag-to-component",
@@ -39,14 +32,7 @@
       "replacement": {
         "pattern": "{receiver}.setTag({0})",
         "template": "{receiver}.set(DataComponents.CUSTOM_DATA, CustomData.of({0}))"
-      },
-      "confidence": "MEDIUM",
-      "severity": "CRITICAL",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "loaderGuard": ["neoforge", "fabric"],
-      "tags": ["item", "nbt", "datacomponents"]
+      }
     },
     {
       "id": "itemstack-gettag-to-component",
@@ -61,14 +47,7 @@
       "replacement": {
         "pattern": "{receiver}.getTag()",
         "template": "{receiver}.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag()"
-      },
-      "confidence": "MEDIUM",
-      "severity": "CRITICAL",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "loaderGuard": ["neoforge", "fabric"],
-      "tags": ["item", "nbt", "datacomponents"]
+      }
     },
     {
       "id": "data-components-import",
@@ -79,14 +58,7 @@
         "net.minecraft.nbt.CompoundTag": "net.minecraft.nbt.CompoundTag",
         "ADD:net.minecraft.core.component.DataComponents": "net.minecraft.core.component.DataComponents",
         "ADD:net.minecraft.world.item.component.CustomData": "net.minecraft.world.item.component.CustomData"
-      },
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "loaderGuard": ["neoforge", "fabric"],
-      "tags": ["imports"]
+      }
     }
   ]
 }

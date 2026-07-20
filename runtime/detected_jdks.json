@@ -1,0 +1,29 @@
+{
+  "8": {
+    "major": 8,
+    "home": "C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.492.9-hotspot",
+    "java": "C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.492.9-hotspot\\bin\\java.exe",
+    "javac": "C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.492.9-hotspot\\bin\\javac.exe",
+    "javap": "C:\\Program Files\\Eclipse Adoptium\\jdk-8.0.492.9-hotspot\\bin\\javap.exe",
+    "source": "configured",
+    "detected_at": null
+  },
+  "17": {
+    "major": 17,
+    "home": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot",
+    "java": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin\\java.exe",
+    "javac": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin\\javac.exe",
+    "javap": "C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot\\bin\\javap.exe",
+    "source": "configured",
+    "detected_at": null
+  },
+  "21": {
+    "major": 21,
+    "home": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot",
+    "java": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\\bin\\java.exe",
+    "javac": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\\bin\\javac.exe",
+    "javap": "C:\\Program Files\\Eclipse Adoptium\\jdk-21.0.11.10-hotspot\\bin\\javap.exe",
+    "source": "configured",
+    "detected_at": null
+  }
+}

@@ -1,0 +1,7 @@
+server_backup.py is an older snapshot of server.py that predates the fixes
+in this pass (it still forces every downloaded file to end in ".jar", even
+for .zip datapacks/resourcepacks, and still streams the download as a raw
+blob response instead of a plain download link). It's kept here only for
+reference. server.py is the file the app actually imports/runs and is the
+one that's now fixed -- there's no need to keep server_backup.py around
+once you've confirmed the new behavior works for you.

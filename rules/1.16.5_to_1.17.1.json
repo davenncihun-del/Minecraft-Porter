@@ -23,13 +23,7 @@
         "net.minecraft.util.text.ITextComponent": "net.minecraft.network.chat.Component",
         "net.minecraft.util.text.StringTextComponent": "net.minecraft.network.chat.TextComponent",
         "net.minecraft.util.text.TranslationTextComponent": "net.minecraft.network.chat.TranslatableComponent"
-      },
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "tags": ["imports", "world"]
+      }
     },
     {
       "id": "world-class-rename",
@@ -40,12 +34,7 @@
       "wrapperConstructor": null,
       "direction": "forward",
       "inverse": null,
-      "reason": "World was renamed to Level in 1.17. This rule is a marker — actual class rename is handled by IMPORT_REWRITE above.",
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "DIAGNOSTIC_ONLY",
-      "breakingRisk": "NONE"
+      "reason": "World was renamed to Level in 1.17. This rule is a marker — actual class rename is handled by IMPORT_REWRITE above."
     }
   ]
 }

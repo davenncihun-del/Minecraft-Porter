@@ -10,21 +10,14 @@
       "receiverTypes": ["cpw.mods.fml.common.registry.GameRegistry", "net.minecraftforge.fml.common.registry.GameRegistry"],
       "methodName": "registerBlock",
       "matchSignature": ["Block", "String"],
+      "wrapperConstructor": null,
       "direction": "forward",
       "inverse": "registerevent-to-gameregistry-registerblock",
       "reason": "GameRegistry.registerBlock(block, name) was removed in 1.12. Blocks must now use Block.setRegistryName(name) + ForgeRegistries.BLOCKS.register() inside a RegistryEvent handler.",
       "replacement": {
         "pattern": "GameRegistry.registerBlock({0}, {1})",
         "template": "{0}.setRegistryName({1})"
-      },
-      "confidence": "HIGH",
-      "severity": "WARNING",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "loaderGuard": ["forge"],
-      "tags": ["registry"],
-      "notes": "This rewrites the method call to setRegistryName, but the user MUST manually register the block in a RegistryEvent.Register<Block> event handler."
+      }
     },
     {
       "id": "gameregistry-registeritem-to-registerevent",
@@ -32,20 +25,29 @@
       "receiverTypes": ["cpw.mods.fml.common.registry.GameRegistry", "net.minecraftforge.fml.common.registry.GameRegistry"],
       "methodName": "registerItem",
       "matchSignature": ["Item", "String"],
+      "wrapperConstructor": null,
       "direction": "forward",
+      "inverse": null,
       "reason": "GameRegistry.registerItem(item, name) was removed in 1.12. Items must now use Item.setRegistryName(name) + ForgeRegistries.ITEMS.register().",
       "replacement": {
         "pattern": "GameRegistry.registerItem({0}, {1})",
         "template": "{0}.setRegistryName({1})"
-      },
-      "confidence": "HIGH",
-      "severity": "WARNING",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "loaderGuard": ["forge"],
-      "tags": ["registry"],
-      "notes": "This rewrites the method call to setRegistryName, but the user MUST manually register the item in a RegistryEvent.Register<Item> event handler."
+      }
+    },
+    {
+      "id": "block-getidfromblock-to-getstateid",
+      "kind": "METHOD_CALL_ARGS_TO_OBJECT",
+      "receiverTypes": ["net.minecraft.block.Block"],
+      "methodName": "getIdFromBlock",
+      "matchSignature": ["Block"],
+      "wrapperConstructor": null,
+      "direction": "forward",
+      "inverse": null,
+      "reason": "Block.getIdFromBlock(block) was replaced by Block.getStateId(block.getDefaultState()) in 1.12 as part of the move away from raw numeric IDs.",
+      "replacement": {
+        "pattern": "Block.getIdFromBlock({0})",
+        "template": "Block.getStateId({0}.getDefaultState())"
+      }
     },
     {
       "id": "itemstack-constructor-strip-metadata",
@@ -56,13 +58,7 @@
       "stripPositions": [2],
       "direction": "forward",
       "inverse": "itemstack-constructor-inject-metadata",
-      "reason": "In 1.7.10, ItemStack(item, count, metadata) was common. In 1.12.2+, metadata is still present but should migrate toward NBT/capability patterns. This rule flags the usage.",
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "tags": ["item"]
+      "reason": "In 1.7.10, ItemStack(item, count, metadata) was common. In 1.12.2+, metadata is still present but should migrate toward NBT/capability patterns. This rule flags the usage."
     },
     {
       "id": "fml-package-migration",
@@ -73,13 +69,16 @@
         "cpw.mods.fml.common": "net.minecraftforge.fml.common",
         "cpw.mods.fml.relauncher": "net.minecraftforge.fml.relauncher",
         "cpw.mods.fml.client": "net.minecraftforge.fml.client"
-      },
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "tags": ["imports"]
+      }
+    },
+    {
+      "id": "creativetabs-package-migration",
+      "kind": "IMPORT_REWRITE",
+      "direction": "forward",
+      "reason": "CreativeTabs was relocated.",
+      "importRewrites": {
+        "net.minecraft.creativetab.CreativeTabs": "net.minecraft.item.ItemGroup"
+      }
     }
   ]
 }

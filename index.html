@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minecraft Compatibility Updater</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <section class="hero">
+        <h1>Minecraft Mod / Pack Porting Studio</h1>
+        <p>
+          Upload a Fabric, Forge, NeoForge, or Vanilla Minecraft archive and run a compatibility-focused porting workflow.
+          The porter analyzes Java sources, metadata, assets, data packs, and configuration files to improve compatibility with the chosen target version.
+        </p>
+      </section>
+
+      <div class="grid">
+        <section class="card">
+          <label for="fileInput">Upload file</label>
+          <input id="fileInput" type="file" accept=".jar,.zip" multiple />
+          <small>Choose one mod, or select the whole dependent mod set to generate one updated bundle.</small>
+
+          <label for="versionSelect">Target Minecraft version</label>
+          <select id="versionSelect">
+            <option value="auto">Auto-safe fallback</option>
+            <option value="26.2">26.2</option>
+            <option value="26.1.2">26.1.2</option>
+            <option value="26.1.1">26.1.1</option>
+            <option value="26.1">26.1</option>
+            <option value="1.21.11">1.21.11</option>
+            <option value="1.21.10">1.21.10</option>
+            <option value="1.21.9">1.21.9</option>
+            <option value="1.21.8">1.21.8</option>
+            <option value="1.21.7">1.21.7</option>
+            <option value="1.21.6">1.21.6</option>
+            <option value="1.21.5">1.21.5</option>
+            <option value="1.21.1">1.21.1</option>
+            <option value="1.20.6">1.20.6</option>
+            <option value="1.20.4">1.20.4</option>
+            <option value="1.20.1">1.20.1</option>
+            <option value="1.19.4">1.19.4</option>
+            <option value="1.19.2">1.19.2</option>
+            <option value="1.18.2">1.18.2</option>
+            <option value="1.17.1">1.17.1</option>
+            <option value="1.16.5">1.16.5</option>
+            <option value="1.16.4">1.16.4</option>
+            <option value="1.15.2">1.15.2</option>
+            <option value="1.14.4">1.14.4</option>
+            <option value="1.13.2">1.13.2</option>
+            <option value="1.12.2">1.12.2</option>
+            <option value="1.12.1">1.12.1</option>
+            <option value="1.12">1.12</option>
+          </select>
+
+          <label for="loaderSelect">Mod loader</label>
+          <select id="loaderSelect">
+            <option value="auto">Auto-detect</option>
+            <option value="Fabric">Fabric</option>
+            <option value="Forge">Forge</option>
+            <option value="NeoForge">NeoForge</option>
+            <option value="Vanilla">Vanilla</option>
+          </select>
+
+          <details class="advanced-card">
+            <summary>Advanced Version Overrides</summary>
+            <div class="advanced-fields" style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">
+              <div>
+                <label for="customMinecraftInput" style="font-size: 0.9rem; margin-bottom: 4px;">Minecraft Version Range Override</label>
+                <input id="customMinecraftInput" type="text" placeholder="e.g., [1.21.1]" />
+              </div>
+              <div>
+                <label for="customNeoForgeInput" style="font-size: 0.9rem; margin-bottom: 4px;">NeoForge/Loader Version Range Override</label>
+                <input id="customNeoForgeInput" type="text" placeholder="e.g., [21.1,)" />
+              </div>
+              <div>
+                <label for="customJavafmlInput" style="font-size: 0.9rem; margin-bottom: 4px;">JavaFML Version Range Override</label>
+                <input id="customJavafmlInput" type="text" placeholder="e.g., [21.1,)" />
+              </div>
+              <div>
+                <label style="font-size: 0.9rem; margin-bottom: 4px;">Dependency Version Overrides</label>
+                <div id="dependencyOverridesList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+                <button type="button" class="secondary" id="addOverrideBtn" style="padding: 6px 12px; font-size: 0.85rem; border-radius: 8px; margin-top: 6px; font-weight: bold; width: auto;">+ Add Dependency Override</button>
+              </div>
+            </div>
+          </details>
+
+          <div class="button-row" style="margin-top: 16px;">
+            <button class="primary" id="inspectBtn">Inspect</button>
+            <button class="secondary" id="updateBtn">Generate Port</button>
+          </div>
+
+          <div class="progress-list" id="progressList"></div>
+          <div class="result-panel" id="resultPanel">
+            <div id="statusBox">Waiting for upload.</div>
+            <div id="errorBox" class="error-box" style="display:none;"></div>
+            <div id="resultBody"></div>
+            <div class="console-panel" id="consolePanel" style="display:none;">
+              <h3>Console</h3>
+              <pre id="consoleOutput">No console output yet.</pre>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <h3>What this porter does</h3>
+          <ul>
+            <li>Analyzes archive contents including Java sources, metadata, assets, data packs, and config files.</li>
+            <li>Applies compatibility migration rules for loader API changes and common version transitions.</li>
+            <li>Writes a new archive named with the updated suffix instead of overwriting the original.</li>
+            <li>Produces a compatibility report showing applied rules, changed files, and unresolved issues.</li>
+          </ul>
+          <h3 style="margin-top: 18px;">Supported fallback order</h3>
+          <ul>
+            <li>26.2 → 26.1.2 → 26.1.1 → 26.1 → 1.21.11 → 1.21.10 → 1.21.9 → 1.21.8 → 1.21.7 → 1.21.6 → 1.21.5 → 1.21.1 → 1.20.6 → 1.20.4 → 1.20.1 → 1.19.4 → 1.19.2 → 1.18.2 → 1.17.1 → 1.16.5 → 1.16.4 → 1.15.2 → 1.14.4 → 1.13.2 → 1.12.2 → 1.12.1 → 1.12</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

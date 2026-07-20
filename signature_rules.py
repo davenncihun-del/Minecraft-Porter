@@ -40,18 +40,6 @@ class SignatureRule:
     import_rewrites: Optional[Dict[str, str]] = None
     # Generic replacement template (for template-based rewrites)
     replacement_template: Optional[Dict[str, str]] = None
-    # Auditing Metadata
-    confidence: str = "HIGH"
-    severity: str = "INFO"
-    requires_review: bool = False
-    automation_level: str = "FULL_AUTO"
-    breaking_risk: str = "NONE"
-    version_guard: Optional[str] = None
-    loader_guard: Optional[List[str]] = None
-    tags: Optional[List[str]] = None
-    references: Optional[List[str]] = None
-    before_example: Optional[str] = None
-    after_example: Optional[str] = None
 
     @classmethod
     def from_dict(cls, data: dict) -> "SignatureRule":
@@ -73,17 +61,6 @@ class SignatureRule:
             strip_positions=data.get("stripPositions"),
             import_rewrites=data.get("importRewrites"),
             replacement_template=data.get("replacement"),
-            confidence=data.get("confidence", "HIGH"),
-            severity=data.get("severity", "INFO"),
-            requires_review=data.get("requiresReview", False),
-            automation_level=data.get("automationLevel", "FULL_AUTO"),
-            breaking_risk=data.get("breakingRisk", "NONE"),
-            version_guard=data.get("versionGuard"),
-            loader_guard=data.get("loaderGuard"),
-            tags=data.get("tags"),
-            references=data.get("references"),
-            before_example=data.get("beforeExample"),
-            after_example=data.get("afterExample"),
         )
 
 

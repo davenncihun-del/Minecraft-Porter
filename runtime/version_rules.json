@@ -1,0 +1,20 @@
+{
+  "rules": [
+    {
+      "max_version": "1.16.5",
+      "java_major": 8,
+      "notes": "Minecraft 1.16.5 and earlier -- including Forge 1.12.2 -- only ever shipped/ran on Java 8. Newer JDKs can refuse to launch or crash old Forge/Fabric loaders."
+    },
+    {
+      "min_version": "1.17",
+      "max_version": "1.20.4",
+      "java_major": 17,
+      "notes": "1.17 through 1.20.4 require Java 17 (1.17.x officially wanted Java 16, but 17 is the standard drop-in when only 8/17/21 are installed side-by-side)."
+    },
+    {
+      "min_version": "1.20.5",
+      "java_major": 21,
+      "notes": "1.20.5 onward -- including the 1.21.x line and the renumbered 26.x version line -- require Java 21."
+    }
+  ]
+}

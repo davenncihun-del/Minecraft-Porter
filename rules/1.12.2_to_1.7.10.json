@@ -17,14 +17,7 @@
       "replacement": {
         "pattern": "{receiver}.setRegistryName({0})",
         "template": "GameRegistry.registerBlock({receiver}, {0})"
-      },
-      "confidence": "HIGH",
-      "severity": "WARNING",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "loaderGuard": ["forge"],
-      "tags": ["registry"]
+      }
     },
     {
       "id": "itemstack-constructor-inject-metadata",
@@ -36,13 +29,7 @@
       "injectValue": "0",
       "direction": "backward",
       "inverse": "itemstack-constructor-strip-metadata",
-      "reason": "Downporting to 1.7.10: ItemStack(item, count) needs metadata parameter. Injecting default metadata=0.",
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "tags": ["item"]
+      "reason": "Downporting to 1.7.10: ItemStack(item, count) needs metadata parameter. Injecting default metadata=0."
     },
     {
       "id": "fml-package-migration-reverse",
@@ -53,13 +40,7 @@
         "net.minecraftforge.fml.common": "cpw.mods.fml.common",
         "net.minecraftforge.fml.relauncher": "cpw.mods.fml.relauncher",
         "net.minecraftforge.fml.client": "cpw.mods.fml.client"
-      },
-      "confidence": "HIGH",
-      "severity": "INFO",
-      "requiresReview": false,
-      "automationLevel": "FULL_AUTO",
-      "breakingRisk": "NONE",
-      "tags": ["imports"]
+      }
     },
     {
       "id": "world-getblockstate-to-getblock",
@@ -73,14 +54,7 @@
       "reason": "Downporting to 1.7.10: World#getBlockState(BlockPos) does not exist. Expand to World#getBlock(x, y, z).",
       "replacement": {
         "methodName": "getBlock"
-      },
-      "confidence": "HIGH",
-      "severity": "WARNING",
-      "requiresReview": true,
-      "automationLevel": "PARTIAL",
-      "breakingRisk": "HIGH",
-      "tags": ["world"],
-      "notes": "Translating getBlockState to getBlock returns a Block instead of an IBlockState, causing compilation errors if methods were chained."
+      }
     }
   ]
 }
