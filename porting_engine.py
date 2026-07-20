@@ -11,23 +11,6 @@ from typing import Dict, List, Optional, Tuple
 from transformer import rewrite_metadata
 
 
-JAVA_MIGRATIONS = [
-    (r"net\.minecraft\.util\.ResourceLocation", "net.minecraft.resources.ResourceLocation"),
-    (r"net\.minecraft\.util\.text", "net.minecraft.network.chat"),
-    (r"\bITextComponent\b", "Component"),
-    (r"\bTextComponent\b", "Component"),
-    (r"net\.minecraftforge\.common\.MinecraftForge", "net.neoforge.common.NeoForge"),
-    (r"net\.minecraftforge\.event\.bus\.api\.SubscribeEvent", "net.neoforge.eventbus.api.SubscribeEvent"),
-    (r"net\.minecraftforge\.common\.Mod", "net.neoforge.common.Mod"),
-    (r"net\.minecraftforge\.client\.event\.RenderGuiOverlayEvent", "net.neoforge.client.event.RenderGuiOverlayEvent"),
-    (r"net\.minecraftforge\.event\.entity\.living\.LivingEvent", "net.neoforge.event.entity.living.LivingEvent"),
-    (r"\bRegistryEvent\.Register\b", "RegisterEvent"),
-    (r"\bMinecraftForge\.EVENT_BUS\b", "NeoForge.EVENT_BUS"),
-    (r"\bFMLJavaModLoadingContext\b", "ModLoadingContext"),
-    (r"\bDist\.CLIENT\b", "Dist.CLIENT"),
-    (r"\bModLoadingContext\.get\(\)\b", "ModLoadingContext.get()"),
-]
-
 RESOURCE_RULES = [
     ("minecraft:models", "assets/<namespace>/models"),
     ("minecraft:lang", "assets/<namespace>/lang"),
@@ -434,12 +417,6 @@ class PortingEngine:
                 finally:
                     if 'tf_path' in locals() and os.path.exists(tf_path):
                         os.unlink(tf_path)
-            else:
-                for pattern, replacement in JAVA_MIGRATIONS:
-                    if re.search(pattern, updated_text):
-                        updated_text = re.sub(pattern, replacement, updated_text)
-                        rules.append(f"java:{replacement}")
-                        applied += 1
 
             if any(marker in updated_text for marker in ["RegisterEvent", "NeoForge.EVENT_BUS", "net.minecraft.resources.ResourceLocation", "ModLoadingContext"]):
                 rules.append("java:api-compat")
