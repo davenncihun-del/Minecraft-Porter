@@ -408,32 +408,29 @@ class PortingEngine:
 
         if file_name.endswith(".java") or file_name.endswith(".kt") or file_name.endswith(".groovy") or file_name.endswith(".scala"):
             applied = 0
-            is_better_113 = file_name.endswith(".java") and (
-                (current_version == "1.12.2" and self.target_version == "1.13.2") or 
-                (current_version == "1.13.2" and self.target_version == "1.12.2")
-            )
+            is_java = file_name.endswith(".java")
             
-            if is_better_113:
+            if is_java:
                 try:
                     with tempfile.NamedTemporaryFile(suffix=".java", delete=False) as tf:
                         tf.write(updated_text.encode("utf-8"))
                         tf_path = tf.name
                     out_dir = tempfile.mkdtemp()
-                    jar_path = r"C:\Users\Davennci\Desktop\vsprojects\Better1.13lib\target\better1.13lib-1.0-SNAPSHOT-jar-with-dependencies.jar"
+                    jar_path = r"C:\Users\Davennci\Desktop\vsprojects\BetterVersions\target\betterversions-1.0-SNAPSHOT-jar-with-dependencies.jar"
                     if os.path.exists(jar_path):
                         subprocess.run(["java", "-jar", jar_path, tf_path, "-o", out_dir, "-f", current_version, "-t", self.target_version], check=True, capture_output=True)
                         out_file = os.path.join(out_dir, os.path.basename(tf_path))
                         if os.path.exists(out_file):
                             with open(out_file, "r", encoding="utf-8") as f:
                                 updated_text = f.read()
-                            rules.append("java:better1.13lib-ast-migration")
+                            rules.append("java:betterversions-ast-migration")
                             applied += 1
                         else:
-                            issues.append("Better-1.13-lib did not produce an output file.")
+                            issues.append("BetterVersions did not produce an output file.")
                     else:
-                        issues.append("Better-1.13-lib jar not found. Please build the java project.")
+                        issues.append("BetterVersions jar not found. Please build the java project.")
                 except Exception as e:
-                    issues.append(f"Better-1.13-lib migration failed: {e}")
+                    issues.append(f"BetterVersions migration failed: {e}")
                 finally:
                     if 'tf_path' in locals() and os.path.exists(tf_path):
                         os.unlink(tf_path)

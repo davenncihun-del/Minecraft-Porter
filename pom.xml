@@ -14,8 +14,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.better113</groupId>
-      <artifactId>better1.13lib</artifactId>
+      <groupId>com.betterversions</groupId>
+      <artifactId>betterversions</artifactId>
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
